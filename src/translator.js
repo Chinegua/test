@@ -3,12 +3,8 @@
 var Translate = require('@google-cloud/translate');
 var async = require('async');
 
-var TranslateService = {};
-var translate = new Translate({
-  keyFilename: './src/translator.conf.json',
-});
 
-TranslateService.translateText = function (content, targetLang, next) {
+/*TranslateService.translateText = function (content, targetLang, next) {
 
   var calls = [];
 
@@ -27,7 +23,24 @@ TranslateService.translateText = function (content, targetLang, next) {
   async.waterfall(calls, function (err, response) {
     if (next) next(err, response);
   });
-};
+};*/
+export class TranslateService {
 
+  constructor(){
+    this.translate = new Translate({ keyFilename: './src/translator.conf.json' });
+  }
 
-module.exports = TranslateService;
+  translateText(content, targetLang){
+    return this.translate
+    .translate( content, targetLang )
+    .then(results => {
+      return results;
+      //return callback(null, results[0]);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+      return err;
+    });
+  }
+}
+
